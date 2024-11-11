@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+.flip-counter {
+    display: flex;
+}
+
+.flip-digit {
+    position: relative;
+    width: 100px;
+    height: 150px;
+    margin: 0 5px;
+    perspective: 1000px;
+}
+
+.flip-digit::before,
+.flip-digit::after {
+    content: attr(data-number);
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: #333;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4em;
+    backface-visibility: hidden;
+}
+
+.flip-digit::before {
+    top: 0;
+    transform-origin: bottom;
+    transform: rotateX(0deg);
+}
+
+.flip-digit::after {
+    bottom: 0;
+    transform-origin: top;
+    transform: rotateX(-180deg);
+}
+
+.flip-digit.flipping .flip-next::before {
+    transform: rotateX(-180deg);
+}
+
+.flip-digit.flipping .flip-next::after {
+    transform: rotateX(0deg);
+}
+
+.flip-digit.flipping .flip-current::before {
+    transform: rotateX(0deg);
+}
+
+.flip-digit.flipping .flip-current::after {
+    transform: rotateX(180deg);
+}
+
+.flip-digit div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip Counter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="flip-counter">
+        <div class="flip-digit" id="tens"></div>
+        <div class="flip-digit" id="ones"></div>
+    </div>
+
+    <script>
+        let tens = 0;
+let ones = 0;
+
+function updateDigit(digitElement, value) {
+    digitElement.setAttribute('data-number', value);
+    digitElement.innerHTML = `
+        <div class="flip-current">${value}</div>
+        <div class="flip-next">${(value + 1) % 10}</div>
+    `;
+}
+
+function flipDigit(digitElement) {
+    digitElement.classList.add('flipping');
+    setTimeout(() => {
+        digitElement.classList.remove('flipping');
+    }, 500);
+}
+
+function updateCounter() {
+    ones++;
+    if (ones > 9) {
+        ones = 0;
+        tens++;
+        if (tens > 5) {
+            tens = 0;
+        }
+        updateDigit(document.getElementById('tens'), tens);
+        flipDigit(document.getElementById('tens'));
+    }
+    updateDigit(document.getElementById('ones'), ones);
+    flipDigit(document.getElementById('ones'));
+}
+
+function startCounter() {
+    updateDigit(document.getElementById('tens'), tens);
+    updateDigit(document.getElementById('ones'), ones);
+    setInterval(updateCounter, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', startCounter);
+
+    </script>
+</body>
+</html>

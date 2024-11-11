@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Scroll Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .item {
+            padding: 20px;
+            margin: 10px 0;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+        }
+        #loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- Initial items will be added here -->
+    </div>
+    <div id="loading">Loading...</div>
+
+    <script>
+        const container = document.getElementById('container');
+        const loading = document.getElementById('loading');
+        let isLoading = false;
+        loading.style.display = 'none';
+        // Function to simulate fetching new data
+        function fetchNewData() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const newItems = [];
+                    for (let i = 0; i < 15; i++) {
+                        newItems.push(`Item ${Math.floor(Math.random() * 1000)}`);
+                    }
+                    resolve(newItems);
+                }, 1000);
+            });
+        }
+
+        // Function to add new items to the container
+        function addItems(items) {
+            items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.textContent = item;
+                container.appendChild(itemElement);
+            });
+        }
+
+        // Function to handle scroll event
+        function onScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 800 && !isLoading) {
+                isLoading = true;
+                loading.style.display = 'block';
+
+                fetchNewData().then(newItems => {
+                    addItems(newItems);
+                    isLoading = false;
+                    loading.style.display = 'none';
+                });
+            }
+        }
+
+        // Initial load
+        fetchNewData().then(newItems => addItems(newItems));
+
+        // Attach scroll event listener
+        window.addEventListener('scroll', onScroll);
+    </script>
+</body>
+</html>

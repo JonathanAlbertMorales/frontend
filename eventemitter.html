@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Emitter</title>
+</head>
+<body>
+<script>
+  
+  // Declaration
+class EventEmitter {
+  constructor() {
+    this.events = {};
+    this.onceEvents = {}
+  }
+  on(eventKey, eventHandler){
+    if(!this.events[eventKey]) {
+      this.events[eventKey] = []
+    }
+    this.events[eventKey].push(eventHandler)
+  }
+  emit(eventKey, param){
+    for(let fu of this.events[eventKey]) {
+      fu(param)
+    }
+
+    if(this.onceEvents[eventKey]) {
+      for(let fu of this.onceEvents[eventKey]) {
+        fu(param)
+      }
+
+      this.onceEvents[eventKey] = []
+    }
+  
+  }
+
+  once(eventKey, eventHandler) {
+    if(!this.onceEvents[eventKey]) {
+      this.onceEvents[eventKey] = []
+    }
+    this.onceEvents[eventKey].push(eventHandler)
+  } 
+}
+// Add your implementation here, and initialize eventEmitter with an actual value;
+var eventEmitter = new EventEmitter();
+
+function responseToEvent(msg) {
+    console.log(msg);
+}
+  
+
+
+eventEmitter.on('pramp', responseToEvent);
+  //eventEmitter.on('pramp2', responseToEvent);
+// eventEmitter.once('pramp', function(msg) { console.log(msg + ' just once!'); });
+eventEmitter.emit('pramp', '1st');
+eventEmitter.emit('pramp', '2nd');
+// eventEmitter.off('pramp', responseToEvent);
+// eventEmitter.emit('pramp', '3rd');
+// eventEmitter.emit('pramp', '1st');
+</script>
+</body>
+</html>

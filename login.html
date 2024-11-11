@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="form-container">
+        <form id="registrationForm">
+            <h2>Register</h2>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <span class="error-message" id="emailError"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+                <span class="error-message" id="passwordError"></span>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script src="script.js">
+        document.getElementById('email').addEventListener('blur', validateEmail);
+document.getElementById('password').addEventListener('blur', validatePassword);
+document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting the default way
+
+    if (validateEmail() & validatePassword()) {
+        // Submit the form or perform further actions here
+        alert('Form submitted successfully!');
+    }
+});
+
+function validateEmail() {
+    const email = document.getElementById('email').value.trim();
+    const emailError = document.getElementById('emailError');
+    
+    if (email === '') {
+        emailError.textContent = 'Email is required.';
+        emailError.style.display = 'block';
+        return false;
+    } else {
+        emailError.style.display = 'none';
+        return true;
+    }
+}
+
+function validatePassword() {
+    const password = document.getElementById('password').value.trim();
+    const passwordError = document.getElementById('passwordError');
+    
+    if (password === '') {
+        passwordError.textContent = 'Password is required.';
+        passwordError.style.display = 'block';
+        return false;
+    } else if (password.length < 8) {
+        passwordError.textContent = 'Password must be at least 8 characters.';
+        passwordError.style.display = 'block';
+        return false;
+    } else {
+        passwordError.style.display = 'none';
+        return true;
+    }
+}
+
+    </script>
+</body>
+</html>
